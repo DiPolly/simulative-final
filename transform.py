@@ -1,5 +1,3 @@
-"""Разбор passback_params и валидация записей перед загрузкой в БД."""
-
 from __future__ import annotations
 
 import ast
@@ -20,7 +18,6 @@ _CREATED_AT_FORMATS = (
 
 
 def _parse_passback_params(raw: Any) -> dict[str, Any]:
-    """Разобрать строку passback_params через ast.literal_eval (fallback: json)."""
     if isinstance(raw, dict):
         return raw
     if not isinstance(raw, str) or not raw.strip():
@@ -30,7 +27,6 @@ def _parse_passback_params(raw: Any) -> dict[str, Any]:
     try:
         value = ast.literal_eval(text)
     except (ValueError, SyntaxError):
-        # Fallback: одинарные кавычки → двойные для json.loads
         normalized = text
         if normalized.startswith("'") and normalized.endswith("'"):
             normalized = normalized[1:-1]
@@ -48,7 +44,6 @@ def _parse_passback_params(raw: Any) -> dict[str, Any]:
 
 
 def _normalize_is_correct(raw: Any) -> Optional[bool]:
-    """API отдаёт null / 0 / 1; допускаем также bool."""
     if raw is None or isinstance(raw, bool):
         return raw
     if raw == 0 or raw == 1:
@@ -74,7 +69,7 @@ def _non_empty_str(value: Any, field: str) -> str:
     return value
 
 
-def _validate_record(raw: Any, index: int) -> dict[str, Any]:
+def _validate_record(raw: Any, _index: int) -> dict[str, Any]:
     if not isinstance(raw, dict):
         raise ValueError(f"запись не dict (тип {type(raw).__name__})")
 
@@ -114,11 +109,6 @@ def _validate_record(raw: Any, index: int) -> dict[str, Any]:
 
 
 def parse_and_validate(raw_records: list[Any]) -> list[dict[str, Any]]:
-    """
-    Разобрать сырые записи API, провалидировать и вернуть готовые к insert.
-
-    Битые записи пропускаются с WARNING в лог.
-    """
     accepted: list[dict[str, Any]] = []
     skipped = 0
 

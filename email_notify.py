@@ -1,5 +1,3 @@
-"""Email-уведомление об успешном ETL через mail.ru SMTP (smtplib + SSL)."""
-
 from __future__ import annotations
 
 import logging
@@ -19,7 +17,6 @@ def _flag_is_false(value: str) -> bool:
 
 
 def is_email_configured() -> bool:
-    """Проверить наличие SMTP-учётных данных и получателя."""
     if _flag_is_false(config.EMAIL_ENABLED):
         return False
     return bool(
@@ -62,12 +59,6 @@ def _build_body(stats: dict[str, Any]) -> str:
 
 
 def send_success_email(stats: dict[str, Any]) -> None:
-    """
-    Отправить plain-text письмо с метриками через SMTP SSL (mail.ru).
-
-    Если SMTP_USER / SMTP_PASSWORD / EMAIL_TO не заданы — WARNING и выход.
-    Ошибки SMTP логируются как ERROR и не пробрасываются (ETL уже успешен в БД).
-    """
     if not is_email_configured():
         logger.warning(
             "Email-уведомление пропущено: не заданы SMTP_USER / SMTP_PASSWORD / "

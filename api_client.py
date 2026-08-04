@@ -1,5 +1,3 @@
-"""Клиент API статистики грейдера (GET /api/statistics)."""
-
 from __future__ import annotations
 
 import logging
@@ -16,11 +14,6 @@ _REQUEST_TIMEOUT = 120
 
 
 def fetch_statistics(start: str, end: str) -> list[Any]:
-    """
-    Скачать статистику за период [start, end] (формат дат как в API).
-
-    Возвращает список словарей. При HTTP/JSON-ошибках логирует ERROR и бросает исключение.
-    """
     logger.info("Скачивание статистики началось: start=%s, end=%s", start, end)
 
     params = {

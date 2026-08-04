@@ -1,5 +1,3 @@
-"""Точка входа ETL: API → валидация → PostgreSQL → агрегация → Sheets/email → лог."""
-
 from __future__ import annotations
 
 import argparse
@@ -86,8 +84,6 @@ def main() -> int:
             skipped,
         )
 
-        # Агрегация и уведомления — после успешной загрузки в БД.
-        # Сбои Sheets/email логируются, но не меняют код выхода (данные уже в БД).
         stats = build_daily_stats(
             valid_records,
             downloaded=len(raw_records),

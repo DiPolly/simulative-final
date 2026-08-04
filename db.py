@@ -1,5 +1,3 @@
-"""Работа с PostgreSQL: создание таблицы и вставка записей."""
-
 from __future__ import annotations
 
 import logging
@@ -48,12 +46,10 @@ INSERT INTO attempts (
 
 
 def get_connection() -> Any:
-    """Открыть соединение с PostgreSQL по DSN из config."""
     return psycopg2.connect(config.get_dsn())
 
 
 def ensure_table(conn: Any) -> None:
-    """CREATE TABLE IF NOT EXISTS для таблицы attempts."""
     with conn.cursor() as cur:
         cur.execute(_CREATE_TABLE_SQL)
     conn.commit()
@@ -61,7 +57,6 @@ def ensure_table(conn: Any) -> None:
 
 
 def clear_table(conn: Any) -> None:
-    """Очистить таблицу перед повторной загрузкой (TRUNCATE)."""
     with conn.cursor() as cur:
         cur.execute("TRUNCATE TABLE attempts RESTART IDENTITY;")
     conn.commit()
@@ -69,11 +64,6 @@ def clear_table(conn: Any) -> None:
 
 
 def insert_records(conn: Any, records: list[dict[str, Any]]) -> int:
-    """
-    Вставить валидные записи в PostgreSQL.
-
-    Возвращает число вставленных строк. При ошибке — rollback и ERROR в лог.
-    """
     if not records:
         logger.info("Нет записей для вставки")
         return 0

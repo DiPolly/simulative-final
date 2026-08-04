@@ -1,5 +1,3 @@
-"""Настройка логирования в файлы logs/YYYY-MM-DD.log и очистка старых логов."""
-
 from __future__ import annotations
 
 import logging
@@ -19,7 +17,6 @@ def cleanup_old_logs(
     logs_dir: Path | None = None,
     keep_days: int = 3,
 ) -> list[Path]:
-    """Удалить *.log старше keep_days дней. Возвращает список удалённых путей."""
     directory = logs_dir if logs_dir is not None else config.LOGS_DIR
     if not directory.is_dir():
         return []
@@ -48,7 +45,6 @@ def cleanup_old_logs(
 
 
 def setup_logging(logs_dir: Path | None = None) -> Path:
-    """Создать каталог логов, настроить logger grader_etl, вернуть путь к сегодняшнему файлу."""
     directory = logs_dir if logs_dir is not None else config.LOGS_DIR
     directory.mkdir(parents=True, exist_ok=True)
 

@@ -1,5 +1,3 @@
-"""Конфигурация проекта: API, PostgreSQL, даты выгрузки, пути."""
-
 from __future__ import annotations
 
 import os
@@ -12,7 +10,6 @@ LOGS_DIR = PROJECT_ROOT / "logs"
 
 load_dotenv(PROJECT_ROOT / ".env")
 
-# Значения по умолчанию совпадают с .env.example (локальная разработка / Docker).
 _DEFAULTS = {
     "API_URL": "https://b2b.itresume.ru/api/statistics",
     "API_CLIENT": "Skillfactory",
@@ -38,7 +35,6 @@ def _env(name: str) -> str:
 
 
 def _env_optional(name: str, default: str = "") -> str:
-    """Опциональная переменная: пустое значение допустимо."""
     raw = os.getenv(name)
     if raw is None:
         return default
@@ -58,13 +54,11 @@ POSTGRES_PASSWORD: str = _env("POSTGRES_PASSWORD")
 START_DATE: str = _env("START_DATE")
 END_DATE: str = _env("END_DATE")
 
-# Google Sheets (опционально — без credentials ETL всё равно успешен)
 GOOGLE_CREDENTIALS_PATH: str = _env_optional("GOOGLE_CREDENTIALS_PATH")
 GOOGLE_SHEET_ID: str = _env_optional("GOOGLE_SHEET_ID")
 GOOGLE_WORKSHEET_NAME: str = _env_optional("GOOGLE_WORKSHEET_NAME", "daily_stats")
 GOOGLE_SHEETS_ENABLED: str = _env_optional("GOOGLE_SHEETS_ENABLED")
 
-# Email mail.ru SMTP (опционально)
 SMTP_SERVER: str = _env_optional("SMTP_SERVER", "smtp.mail.ru")
 SMTP_PORT: str = _env_optional("SMTP_PORT", "465")
 SMTP_USER: str = _env_optional("SMTP_USER")
@@ -74,7 +68,6 @@ EMAIL_ENABLED: str = _env_optional("EMAIL_ENABLED")
 
 
 def get_dsn() -> str:
-    """DSN для psycopg2.connect()."""
     return (
         f"host={POSTGRES_HOST} "
         f"port={POSTGRES_PORT} "

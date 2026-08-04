@@ -1,5 +1,3 @@
-"""Выгрузка дневной статистики в Google Sheets (gspread + service account)."""
-
 from __future__ import annotations
 
 import logging
@@ -27,7 +25,6 @@ def _flag_is_true(value: str) -> bool:
 
 
 def is_sheets_configured() -> bool:
-    """Проверить, нужно ли и можно ли выгружать в Sheets."""
     path = config.GOOGLE_CREDENTIALS_PATH.strip()
     sheet_id = config.GOOGLE_SHEET_ID.strip()
     flag = config.GOOGLE_SHEETS_ENABLED.strip()
@@ -36,17 +33,10 @@ def is_sheets_configured() -> bool:
         return False
     if _flag_is_true(flag):
         return bool(path and sheet_id)
-    # Флаг не задан: включено только при наличии path + sheet_id
     return bool(path and sheet_id)
 
 
 def upload_daily_stats(stats: dict[str, Any]) -> None:
-    """
-    Добавить строку дневной статистики в Google Sheets.
-
-    Если credentials не настроены — WARNING и выход.
-    Ошибки API логируются как ERROR и не пробрасываются (ETL уже успешен в БД).
-    """
     if not is_sheets_configured():
         logger.warning(
             "Google Sheets пропущен: не заданы GOOGLE_CREDENTIALS_PATH / "
@@ -99,7 +89,6 @@ def _upload(stats: dict[str, Any]) -> None:
         worksheet.append_rows([headers] + data_rows, value_input_option="USER_ENTERED")
     else:
         if first_row != headers:
-            # Заголовок отсутствует или не совпадает — привести row 1 к актуальному
             worksheet.update(
                 [headers],
                 "A1",

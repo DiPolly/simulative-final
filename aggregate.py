@@ -1,5 +1,3 @@
-"""Дневная агрегация метрик по загруженным попыткам."""
-
 from __future__ import annotations
 
 from collections import Counter, OrderedDict
@@ -8,7 +6,6 @@ from typing import Any, Dict, List, Tuple
 
 
 def _date_part(value: str) -> str:
-    """Извлечь YYYY-MM-DD из строки периода или ISO-даты."""
     text = (value or "").strip()
     if len(text) >= 10:
         return text[:10]
@@ -16,7 +13,6 @@ def _date_part(value: str) -> str:
 
 
 def _report_date(records: list[dict[str, Any]], period_start: str) -> str:
-    """Дата отчёта: из period_start, иначе самая частая дата created_at."""
     from_period = _date_part(period_start)
     if from_period:
         try:
@@ -49,11 +45,6 @@ def build_daily_stats(
     period_start: str,
     period_end: str,
 ) -> Dict[str, Any]:
-    """
-    Посчитать дневные метрики по валидным записям.
-
-    Возвращает OrderedDict со стабильным порядком ключей (удобно для заголовков Sheets).
-    """
     total_attempts = len(records)
     successful = 0
     failed = 0
@@ -112,7 +103,6 @@ def build_daily_stats(
 
 
 def stats_as_rows(stats: dict) -> Tuple[List[str], List[List[Any]]]:
-    """Заголовок + одна строка данных, удобная для Google Sheets."""
     headers = list(stats.keys())
     row = [stats[key] for key in headers]
     return headers, [row]
