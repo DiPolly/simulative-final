@@ -1,11 +1,8 @@
-from __future__ import annotations
-
 import ast
 import json
 import logging
 import re
 from datetime import datetime
-from typing import Any, Optional
 
 from logging_setup import LOGGER_NAME
 
@@ -17,7 +14,7 @@ _CREATED_AT_FORMATS = (
 )
 
 
-def _parse_passback_params(raw: Any) -> dict[str, Any]:
+def _parse_passback_params(raw):
     if isinstance(raw, dict):
         return raw
     if not isinstance(raw, str) or not raw.strip():
@@ -43,7 +40,7 @@ def _parse_passback_params(raw: Any) -> dict[str, Any]:
     return value
 
 
-def _normalize_is_correct(raw: Any) -> Optional[bool]:
+def _normalize_is_correct(raw):
     if raw is None or isinstance(raw, bool):
         return raw
     if raw == 0 or raw == 1:
@@ -51,7 +48,7 @@ def _normalize_is_correct(raw: Any) -> Optional[bool]:
     raise ValueError("is_correct должен быть bool, 0/1 или None")
 
 
-def _parse_created_at(raw: Any) -> datetime:
+def _parse_created_at(raw):
     if not isinstance(raw, str) or not raw.strip():
         raise ValueError("created_at пуст или не строка")
     text = raw.strip()
@@ -63,13 +60,13 @@ def _parse_created_at(raw: Any) -> datetime:
     raise ValueError(f"не удалось разобрать created_at: {text!r}")
 
 
-def _non_empty_str(value: Any, field: str) -> str:
+def _non_empty_str(value, field):
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{field} должен быть непустой строкой")
     return value
 
 
-def _validate_record(raw: Any, _index: int) -> dict[str, Any]:
+def _validate_record(raw, _index):
     if not isinstance(raw, dict):
         raise ValueError(f"запись не dict (тип {type(raw).__name__})")
 
@@ -108,12 +105,12 @@ def _validate_record(raw: Any, _index: int) -> dict[str, Any]:
     }
 
 
-def parse_and_validate(raw_records: list[Any]) -> list[dict[str, Any]]:
-    accepted: list[dict[str, Any]] = []
+def parse_and_validate(raw_records):
+    accepted = []
     skipped = 0
 
     for index, raw in enumerate(raw_records):
-        user_id_hint: Optional[str] = None
+        user_id_hint = None
         try:
             if isinstance(raw, dict):
                 maybe_uid = raw.get("lti_user_id")

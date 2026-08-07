@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import logging
 import re
 from datetime import date, datetime, timedelta
@@ -13,16 +11,13 @@ _DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 _LOG_FORMAT = "%(asctime)s %(levelname)s: %(message)s"
 
 
-def cleanup_old_logs(
-    logs_dir: Path | None = None,
-    keep_days: int = 3,
-) -> list[Path]:
+def cleanup_old_logs(logs_dir=None, keep_days=3):
     directory = logs_dir if logs_dir is not None else config.LOGS_DIR
     if not directory.is_dir():
         return []
 
     cutoff = date.today() - timedelta(days=keep_days)
-    deleted: list[Path] = []
+    deleted = []
 
     for path in directory.iterdir():
         if not path.is_file() or path.suffix != ".log":
@@ -44,7 +39,7 @@ def cleanup_old_logs(
     return deleted
 
 
-def setup_logging(logs_dir: Path | None = None) -> Path:
+def setup_logging(logs_dir=None):
     directory = logs_dir if logs_dir is not None else config.LOGS_DIR
     directory.mkdir(parents=True, exist_ok=True)
 

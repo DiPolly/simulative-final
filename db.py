@@ -1,7 +1,4 @@
-from __future__ import annotations
-
 import logging
-from typing import Any
 
 import psycopg2
 from psycopg2.extras import execute_batch
@@ -45,25 +42,25 @@ INSERT INTO attempts (
 """
 
 
-def get_connection() -> Any:
+def get_connection():
     return psycopg2.connect(config.get_dsn())
 
 
-def ensure_table(conn: Any) -> None:
+def ensure_table(conn):
     with conn.cursor() as cur:
         cur.execute(_CREATE_TABLE_SQL)
     conn.commit()
     logger.info("Таблица attempts готова (CREATE TABLE IF NOT EXISTS)")
 
 
-def clear_table(conn: Any) -> None:
+def clear_table(conn):
     with conn.cursor() as cur:
         cur.execute("TRUNCATE TABLE attempts RESTART IDENTITY;")
     conn.commit()
     logger.info("Таблица attempts очищена (TRUNCATE)")
 
 
-def insert_records(conn: Any, records: list[dict[str, Any]]) -> int:
+def insert_records(conn, records):
     if not records:
         logger.info("Нет записей для вставки")
         return 0

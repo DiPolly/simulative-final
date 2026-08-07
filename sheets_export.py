@@ -1,8 +1,5 @@
-from __future__ import annotations
-
 import logging
 from pathlib import Path
-from typing import Any
 
 import config
 from aggregate import stats_as_rows
@@ -16,15 +13,15 @@ _SCOPES = (
 )
 
 
-def _flag_is_false(value: str) -> bool:
+def _flag_is_false(value):
     return value.strip().lower() in ("false", "0", "no", "off")
 
 
-def _flag_is_true(value: str) -> bool:
+def _flag_is_true(value):
     return value.strip().lower() in ("true", "1", "yes", "on")
 
 
-def is_sheets_configured() -> bool:
+def is_sheets_configured():
     path = config.GOOGLE_CREDENTIALS_PATH.strip()
     sheet_id = config.GOOGLE_SHEET_ID.strip()
     flag = config.GOOGLE_SHEETS_ENABLED.strip()
@@ -36,7 +33,7 @@ def is_sheets_configured() -> bool:
     return bool(path and sheet_id)
 
 
-def upload_daily_stats(stats: dict[str, Any]) -> None:
+def upload_daily_stats(stats):
     if not is_sheets_configured():
         logger.warning(
             "Google Sheets пропущен: не заданы GOOGLE_CREDENTIALS_PATH / "
@@ -52,7 +49,7 @@ def upload_daily_stats(stats: dict[str, Any]) -> None:
         )
 
 
-def _upload(stats: dict[str, Any]) -> None:
+def _upload(stats):
     import gspread
     from google.oauth2.service_account import Credentials
 

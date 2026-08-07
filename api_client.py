@@ -1,7 +1,4 @@
-from __future__ import annotations
-
 import logging
-from typing import Any
 
 import requests
 
@@ -13,7 +10,7 @@ logger = logging.getLogger(LOGGER_NAME)
 _REQUEST_TIMEOUT = 120
 
 
-def fetch_statistics(start: str, end: str) -> list[Any]:
+def fetch_statistics(start, end):
     logger.info("Скачивание статистики началось: start=%s, end=%s", start, end)
 
     params = {

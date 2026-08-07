@@ -1,10 +1,7 @@
-from __future__ import annotations
-
 import logging
 import smtplib
 import ssl
 from email.message import EmailMessage
-from typing import Any
 
 import config
 from logging_setup import LOGGER_NAME
@@ -12,11 +9,11 @@ from logging_setup import LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 
-def _flag_is_false(value: str) -> bool:
+def _flag_is_false(value):
     return value.strip().lower() in ("false", "0", "no", "off")
 
 
-def is_email_configured() -> bool:
+def is_email_configured():
     if _flag_is_false(config.EMAIL_ENABLED):
         return False
     return bool(
@@ -26,7 +23,7 @@ def is_email_configured() -> bool:
     )
 
 
-def _build_body(stats: dict[str, Any]) -> str:
+def _build_body(stats):
     lines = [
         "ETL грейдера успешно завершён.",
         "",
@@ -58,7 +55,7 @@ def _build_body(stats: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def send_success_email(stats: dict[str, Any]) -> None:
+def send_success_email(stats):
     if not is_email_configured():
         logger.warning(
             "Email-уведомление пропущено: не заданы SMTP_USER / SMTP_PASSWORD / "

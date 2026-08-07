@@ -1,18 +1,15 @@
-from __future__ import annotations
-
 from collections import Counter, OrderedDict
 from datetime import date, datetime
-from typing import Any, Dict, List, Tuple
 
 
-def _date_part(value: str) -> str:
+def _date_part(value):
     text = (value or "").strip()
     if len(text) >= 10:
         return text[:10]
     return text
 
 
-def _report_date(records: list[dict[str, Any]], period_start: str) -> str:
+def _report_date(records, period_start):
     from_period = _date_part(period_start)
     if from_period:
         try:
@@ -21,7 +18,7 @@ def _report_date(records: list[dict[str, Any]], period_start: str) -> str:
         except ValueError:
             pass
 
-    counts: Counter[str] = Counter()
+    counts = Counter()
     for record in records:
         created = record.get("created_at")
         if isinstance(created, datetime):
@@ -37,14 +34,14 @@ def _report_date(records: list[dict[str, Any]], period_start: str) -> str:
 
 
 def build_daily_stats(
-    records: list[dict[str, Any]],
+    records,
     *,
-    downloaded: int,
-    inserted: int,
-    skipped: int,
-    period_start: str,
-    period_end: str,
-) -> Dict[str, Any]:
+    downloaded,
+    inserted,
+    skipped,
+    period_start,
+    period_end,
+):
     total_attempts = len(records)
     successful = 0
     failed = 0
@@ -52,7 +49,7 @@ def build_daily_stats(
     run_attempts = 0
     submit_attempts = 0
     other_attempt_types = 0
-    users: set[str] = set()
+    users = set()
 
     for record in records:
         is_correct = record.get("is_correct")
@@ -102,7 +99,7 @@ def build_daily_stats(
     )
 
 
-def stats_as_rows(stats: dict) -> Tuple[List[str], List[List[Any]]]:
+def stats_as_rows(stats):
     headers = list(stats.keys())
     row = [stats[key] for key in headers]
     return headers, [row]

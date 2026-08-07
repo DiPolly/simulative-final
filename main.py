@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import argparse
 import logging
 import sys
@@ -14,7 +12,7 @@ from sheets_export import upload_daily_stats
 from transform import parse_and_validate
 
 
-def _parse_args() -> argparse.Namespace:
+def _parse_args():
     parser = argparse.ArgumentParser(
         description="ETL статистики грейдера → PostgreSQL",
     )
@@ -31,7 +29,7 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _log_config_summary(logger: logging.Logger, start: str, end: str) -> None:
+def _log_config_summary(logger, start, end):
     logger.info("Сводка конфигурации (без паролей):")
     logger.info("  API URL:    %s", config.API_URL)
     logger.info("  DB host:    %s", config.POSTGRES_HOST)
@@ -42,7 +40,7 @@ def _log_config_summary(logger: logging.Logger, start: str, end: str) -> None:
     logger.info("  LOGS_DIR:   %s", config.LOGS_DIR)
 
 
-def main() -> int:
+def main():
     logger = logging.getLogger(LOGGER_NAME)
     conn = None
     try:
