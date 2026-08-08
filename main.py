@@ -1,5 +1,6 @@
 import ast
 import logging
+import os
 import smtplib
 import ssl
 from datetime import date, datetime, timedelta
@@ -15,26 +16,28 @@ import config
 
 
 def setup_logging():
-    config.LOGS_DIR.mkdir(exist_ok=True)
+    logs_dir = "logs"
+    if not os.path.exists(logs_dir):
+        os.mkdir(logs_dir)
 
-    cutoff = date.today() - timedelta(days=3)
-    for path in config.LOGS_DIR.glob("*.log"):
+    today = date.today()
+    for name in os.listdir(logs_dir):
+        if not name.endswith(".log"):
+            continue
         try:
-            file_date = date.fromisoformat(path.stem)
+            file_date = date.fromisoformat(name.replace(".log", ""))
         except ValueError:
             continue
-        if file_date < cutoff:
-            path.unlink()
+        if file_date < today - timedelta(days=3):
+            os.remove(os.path.join(logs_dir, name))
 
-    log_file = config.LOGS_DIR / f"{date.today().isoformat()}.log"
+    log_file = os.path.join(logs_dir, str(today) + ".log")
     logging.basicConfig(
         level=logging.INFO,
+        filename=log_file,
+        filemode="a",
         format="%(asctime)s %(levelname)s: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
-        handlers=[
-            logging.FileHandler(log_file, encoding="utf-8"),
-            logging.StreamHandler(),
-        ],
     )
 
 

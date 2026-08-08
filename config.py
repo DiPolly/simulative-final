@@ -27,5 +27,3 @@ SMTP_PORT = os.getenv("SMTP_PORT", "465")
 SMTP_USER = os.getenv("SMTP_USER", "")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
 EMAIL_TO = os.getenv("EMAIL_TO", "")
-
-LOGS_DIR = Path(__file__).resolve().parent / "logs"
